@@ -3,11 +3,46 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { X, Plus } from 'lucide-react'
-import { ChangeEvent } from 'react'
+import { X, Plus, Calendar } from 'lucide-react'
+import { ChangeEvent, useEffect, useState } from 'react'
+import { format, parse, isValid } from 'date-fns'
 
 export function ContentConfig() {
   const { moment, setMoment } = useMomentStore()
+  
+  // Local state for the date picker input (YYYY-MM-DDTHH:mm)
+  const [dateInputValue, setDateInputValue] = useState('')
+
+  // Sync dateInputValue with moment.time when component mounts or moment.time changes externally
+  // But only if moment.time matches our format, otherwise leave it empty (or let user overwrite)
+  useEffect(() => {
+    try {
+        // Try to parse "2023年12月12日 12:00"
+        const parsed = parse(moment.time, 'yyyy年MM月dd日 HH:mm', new Date())
+        if (isValid(parsed)) {
+            setDateInputValue(format(parsed, "yyyy-MM-dd'T'HH:mm"))
+        } else {
+            // If moment.time is "Just now" or other format, reset picker or keep it independent?
+            // If we reset it, the picker shows placeholder.
+            // Let's check if it is "Just now" etc.
+            setDateInputValue('')
+        }
+    } catch (e) {
+        setDateInputValue('')
+    }
+  }, [moment.time])
+
+  const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newVal = e.target.value
+    setDateInputValue(newVal)
+    if (newVal) {
+        const date = new Date(newVal)
+        if (isValid(date)) {
+            // Format to WeChat style
+            setMoment({ time: format(date, 'yyyy年MM月dd日 HH:mm') })
+        }
+    }
+  }
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -73,11 +108,43 @@ export function ContentConfig() {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="time">Time</Label>
-            <Input 
-              id="time" 
-              value={moment.time} 
-              onChange={(e) => setMoment({ time: e.target.value })}
-            />
+            <div className="relative">
+                {/* Standard datetime picker */}
+                <div className="relative">
+                    <Input
+                        type="datetime-local"
+                        id="time-picker"
+                        value={dateInputValue}
+                        onChange={handleDateChange}
+                        className="w-full block"
+                        style={{ display: 'block' }}
+                    />
+                </div>
+                {/* Fallback manual text input for "Just now" etc? 
+                    The user requested "Change to standard date time component", so maybe we replace the text input entirely.
+                    But if we do, we lose "Just now".
+                    Let's provide a way to type manual text too?
+                    Actually, let's keep it simple: Date Picker writes to Store. 
+                    If user wants "Just now", they can't type it in the date picker.
+                    
+                    Alternative: Text Input + Date Picker Icon.
+                    Let's try that to be most flexible.
+                */}
+            </div>
+            {/* If we strictly follow "Change this to a standard date time selection component", we might just swap it. 
+               But let's add a small text input below or toggle? 
+               Let's just use a Text Input that has a Date Picker Trigger.
+            */}
+             <div className="flex gap-2 mt-1">
+                 <Input 
+                    id="time-manual" 
+                    value={moment.time} 
+                    onChange={(e) => setMoment({ time: e.target.value })}
+                    placeholder="Custom text (e.g. Just now)"
+                    className="flex-1"
+                />
+             </div>
+             <p className="text-xs text-muted-foreground mt-1">Pick a date above or type custom text below.</p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="source">Source</Label>
