@@ -5,7 +5,7 @@ export function MomentItem() {
   const { user, moment, interactions } = useMomentStore()
 
   return (
-    <div className="px-5 pt-3 text-[15px]">
+    <div className="px-3 pt-2 text-[15px]">
         <div className="flex gap-3">
             {/* Left: Avatar */}
             <img 
@@ -23,7 +23,7 @@ export function MomentItem() {
 
                 {/* Text Content */}
                 {moment.text && (
-                <div className="text-wx-text-primary dark:text-white mb-2.5 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
+                <div className="text-wx-text-primary dark:text-white mb-1 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
                     {moment.text}
                 </div>
                 )}
@@ -44,7 +44,7 @@ export function MomentItem() {
                 )}
 
                 {/* Meta Info */}
-                <div className="flex items-center justify-between text-xs text-wx-text-secondary mb-3">
+                <div className="flex items-center justify-between text-xs text-wx-text-secondary mb-1">
                 <div className="flex items-center gap-3 text-[13px]">
                     <span>{moment.time}</span>
                     {moment.source && <span>{moment.source}</span>}
@@ -52,8 +52,9 @@ export function MomentItem() {
                     <Trash2 className="w-[14px] h-[14px] text-wx-link" />
                 </div>
                 {/* Operation Menu Button */}
-                <div className="bg-gray-100 rounded px-1.5 py-0.5 text-wx-link">
-                    <span className="font-bold tracking-widest text-lg leading-none mb-1 block">··</span>
+                <div className="bg-gray-100 rounded-[4px] px-2.5 py-2 flex gap-1 cursor-pointer">
+                    <div className="w-1 h-1 rounded-full bg-wx-link"></div>
+                    <div className="w-1 h-1 rounded-full bg-wx-link"></div>
                 </div>
                 </div>
             </div>

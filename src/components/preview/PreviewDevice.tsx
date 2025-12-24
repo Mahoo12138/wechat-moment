@@ -29,11 +29,11 @@ export const PreviewDevice = forwardRef<HTMLDivElement>((props, ref) => {
         className="rounded-[2rem] overflow-hidden w-full h-full bg-white dark:bg-black relative flex flex-col"
       >
         {/* Header Container (Status Bar + Nav Bar) */}
-        <div className="bg-[#ededed] dark:bg-[#111111] shrink-0 relative z-20 pb-2">
+        <div className="bg-[#ededed] dark:bg-[#111111] shrink-0 relative z-20 pb-1 ">
             {/* Status Bar */}
             <div className="h-14 flex items-center justify-between text-wx-header-text dark:text-white font-medium select-none"
                 style={{
-                    paddingLeft: '51px',
+                    paddingLeft: '45px',
                     paddingRight: '40px'
                 }}
             >
@@ -50,7 +50,7 @@ export const PreviewDevice = forwardRef<HTMLDivElement>((props, ref) => {
             </div>
 
             {/* Navigation Bar */}
-            <div className="h-11 px-4 flex items-center justify-between text-wx-header-text dark:text-white">
+            <div className="h-11 px-4 flex items-end justify-between text-wx-header-text dark:text-white pb-1.5">
                 <div className="w-8 flex items-center justify-start cursor-pointer">
                     <ChevronLeft className="w-6 h-6 -ml-2" strokeWidth={2} />
                 </div>
@@ -63,7 +63,7 @@ export const PreviewDevice = forwardRef<HTMLDivElement>((props, ref) => {
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto bg-white dark:bg-black no-scrollbar">
-            <div className="pt-2 pb-8">
+            <div className="pt-1 pb-8">
                 <MomentItem />
             </div>
         </div>
