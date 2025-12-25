@@ -75,7 +75,7 @@ export function MomentItem() {
         
         {/* Interactions Container */}
         {(interactions.likes.length > 0 || interactions.comments.length > 0) && (
-            <div className="bg-wx-bg-comment dark:bg-[#202020] rounded-lg p-3 mt-1 ml-[54px]">
+            <div className="bg-wx-bg-comment dark:bg-[#202020] rounded-lg p-3 mt-1">
                 {/* Likes Area */}
                 {interactions.likes.length > 0 && (
                     <div className={`flex items-start gap-3 ${interactions.comments.length > 0 ? 'mb-4 border-b border-black/5 dark:border-white/10 pb-3' : ''}`}>
