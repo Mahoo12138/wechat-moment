@@ -3,16 +3,18 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { X, Plus, Image as ImageIcon, Link as LinkIcon } from 'lucide-react'
+import { X, Plus, Image as ImageIcon, Link as LinkIcon, Loader2, RefreshCw } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { format, parse, isValid } from 'date-fns'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
 
 export function ContentConfig() {
   const { moment, setMoment } = useMomentStore()
   
   // Local state for the date picker input (YYYY-MM-DDTHH:mm)
   const [dateInputValue, setDateInputValue] = useState('')
+  const [isFetchingLink, setIsFetchingLink] = useState(false)
 
   useEffect(() => {
     try {
@@ -64,6 +66,33 @@ export function ContentConfig() {
           cover: url 
         } 
       })
+    }
+  }
+
+  const fetchLinkInfo = async () => {
+    const url = moment.linkInfo?.url
+    if (!url) return
+
+    setIsFetchingLink(true)
+    try {
+        // Use microlink.io API to fetch metadata
+        const response = await fetch(`https://api.microlink.io?url=${encodeURIComponent(url)}`)
+        const data = await response.json()
+        
+        if (data.status === 'success') {
+            const { title, image } = data.data
+            setMoment({
+                linkInfo: {
+                    ...moment.linkInfo!,
+                    title: title || moment.linkInfo?.title || 'No Title',
+                    cover: image?.url || moment.linkInfo?.cover || '/favicon.png'
+                }
+            })
+        }
+    } catch (error) {
+        console.error("Failed to fetch link info", error)
+    } finally {
+        setIsFetchingLink(false)
     }
   }
 
@@ -137,6 +166,33 @@ export function ContentConfig() {
         ) : (
             <div className="space-y-4 p-4 border rounded-lg bg-muted/20">
                 <div className="space-y-2">
+                    <Label htmlFor="link-url">URL (Auto Fetch)</Label>
+                    <div className="flex gap-2">
+                        <Input 
+                            id="link-url"
+                            value={moment.linkInfo?.url || ''}
+                            onChange={(e) => setMoment({ 
+                                linkInfo: { ...moment.linkInfo!, url: e.target.value } 
+                            })}
+                            placeholder="https://example.com"
+                        />
+                        <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={fetchLinkInfo}
+                            disabled={!moment.linkInfo?.url || isFetchingLink}
+                            title="Fetch Title & Image"
+                        >
+                            {isFetchingLink ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <RefreshCw className="w-4 h-4" />
+                            )}
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
                     <Label htmlFor="link-title">Link Title</Label>
                     <Input 
                         id="link-title"
@@ -168,7 +224,7 @@ export function ContentConfig() {
                             </div>
                         </div>
                         <div className="flex-1 text-xs text-muted-foreground">
-                            <p>Upload a square image for the link preview.</p>
+                            <p>Auto-fetched from URL or upload manually.</p>
                             <p className="mt-1">Click image to change.</p>
                         </div>
                     </div>

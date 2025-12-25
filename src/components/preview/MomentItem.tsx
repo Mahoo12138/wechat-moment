@@ -5,7 +5,7 @@ export function MomentItem() {
   const { user, moment, interactions } = useMomentStore()
 
   return (
-    <div className="px-3 pt-2 text-[15px]">
+    <div className="px-2 pt-2 text-[15px]">
         <div className="flex gap-3">
             {/* Left: Avatar */}
             <img 
