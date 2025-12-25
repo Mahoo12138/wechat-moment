@@ -23,24 +23,37 @@ export function MomentItem() {
 
                 {/* Text Content */}
                 {moment.text && (
-                <div className="text-wx-text-primary dark:text-white mb-1 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
+                <div className="text-wx-text-primary dark:text-white mb-2 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
                     {moment.text}
                 </div>
                 )}
 
-                {/* Images Grid */}
-                {moment.images.length > 0 && (
-                <div className={`mb-3 grid gap-1.5 ${
-                    moment.images.length === 1 ? 'grid-cols-1 max-w-[200px]' : 
-                    moment.images.length === 4 ? 'grid-cols-2 max-w-[200px]' : 
-                    'grid-cols-3'
-                }`}>
-                    {moment.images.map((img, idx) => (
-                    <div key={idx} className="aspect-square bg-gray-100 overflow-hidden">
-                        <img src={img} alt={`Moment ${idx}`} className="w-full h-full object-cover" />
+                {/* Images Grid or Link Share */}
+                {moment.type === 'link' ? (
+                    <div className="mb-2 bg-[#f3f3f5] dark:bg-[#202020] p-1.5 flex items-center gap-2 rounded-[4px] cursor-pointer">
+                        <img 
+                            src={moment.linkInfo?.cover || '/favicon.png'} 
+                            alt="Link Cover" 
+                            className="w-[45px] h-[45px] object-cover bg-white"
+                        />
+                        <div className="flex-1 min-w-0 text-[14px] text-wx-text-primary dark:text-white/90 leading-tight line-clamp-2 pr-1">
+                            {moment.linkInfo?.title || '分享链接'}
+                        </div>
                     </div>
-                    ))}
-                </div>
+                ) : (
+                    moment.images.length > 0 && (
+                    <div className={`mb-3 grid gap-1.5 ${
+                        moment.images.length === 1 ? 'grid-cols-1 max-w-[200px]' : 
+                        moment.images.length === 4 ? 'grid-cols-2 max-w-[200px]' : 
+                        'grid-cols-3'
+                    }`}>
+                        {moment.images.map((img, idx) => (
+                        <div key={idx} className="aspect-square bg-gray-100 overflow-hidden">
+                            <img src={img} alt={`Moment ${idx}`} className="w-full h-full object-cover" />
+                        </div>
+                        ))}
+                    </div>
+                    )
                 )}
 
                 {/* Meta Info */}
@@ -52,17 +65,17 @@ export function MomentItem() {
                     <Trash2 className="w-[14px] h-[14px] text-wx-link" />
                 </div>
                 {/* Operation Menu Button */}
-                <div className="bg-gray-100 rounded-[4px] px-2.5 py-2 flex gap-1 cursor-pointer">
-                    <div className="w-1 h-1 rounded-full bg-wx-link"></div>
-                    <div className="w-1 h-1 rounded-full bg-wx-link"></div>
+                <div className="bg-gray-100 rounded-[4px] px-2.5 py-1.5 flex gap-1 cursor-pointer">
+                    <div className="w-1.5 h-1.5 rounded-full bg-wx-link"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-wx-link"></div>
                 </div>
                 </div>
             </div>
         </div>
         
-        {/* Interactions Container - Moved out of the right flex column to span full width (or align as block below) */}
+        {/* Interactions Container */}
         {(interactions.likes.length > 0 || interactions.comments.length > 0) && (
-            <div className="bg-wx-bg-comment dark:bg-[#202020] rounded-lg p-3 mt-1">
+            <div className="bg-wx-bg-comment dark:bg-[#202020] rounded-lg p-3 mt-1 ml-[54px]">
                 {/* Likes Area */}
                 {interactions.likes.length > 0 && (
                     <div className={`flex items-start gap-3 ${interactions.comments.length > 0 ? 'mb-4 border-b border-black/5 dark:border-white/10 pb-3' : ''}`}>

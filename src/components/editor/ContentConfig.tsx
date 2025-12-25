@@ -3,9 +3,10 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { X, Plus, Calendar } from 'lucide-react'
+import { X, Plus, Image as ImageIcon, Link as LinkIcon } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { format, parse, isValid } from 'date-fns'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
 export function ContentConfig() {
   const { moment, setMoment } = useMomentStore()
@@ -13,18 +14,12 @@ export function ContentConfig() {
   // Local state for the date picker input (YYYY-MM-DDTHH:mm)
   const [dateInputValue, setDateInputValue] = useState('')
 
-  // Sync dateInputValue with moment.time when component mounts or moment.time changes externally
-  // But only if moment.time matches our format, otherwise leave it empty (or let user overwrite)
   useEffect(() => {
     try {
-        // Try to parse "2023年12月12日 12:00"
         const parsed = parse(moment.time, 'yyyy年MM月dd日 HH:mm', new Date())
         if (isValid(parsed)) {
             setDateInputValue(format(parsed, "yyyy-MM-dd'T'HH:mm"))
         } else {
-            // If moment.time is "Just now" or other format, reset picker or keep it independent?
-            // If we reset it, the picker shows placeholder.
-            // Let's check if it is "Just now" etc.
             setDateInputValue('')
         }
     } catch (e) {
@@ -38,7 +33,6 @@ export function ContentConfig() {
     if (newVal) {
         const date = new Date(newVal)
         if (isValid(date)) {
-            // Format to WeChat style
             setMoment({ time: format(date, 'yyyy年MM月dd日 HH:mm') })
         }
     }
@@ -60,12 +54,46 @@ export function ContentConfig() {
     setMoment({ images: newImages })
   }
 
+  const handleLinkCoverUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      const url = URL.createObjectURL(file)
+      setMoment({ 
+        linkInfo: { 
+          ...moment.linkInfo!, 
+          cover: url 
+        } 
+      })
+    }
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Moment Content</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Type Toggle */}
+        <div className="space-y-2">
+            <Label>Content Type</Label>
+            <Tabs 
+                value={moment.type} 
+                onValueChange={(val) => setMoment({ type: val as 'original' | 'link' })}
+                className="w-full"
+            >
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="original">
+                        <ImageIcon className="w-4 h-4 mr-2" />
+                        Image & Text
+                    </TabsTrigger>
+                    <TabsTrigger value="link">
+                        <LinkIcon className="w-4 h-4 mr-2" />
+                        Web Link
+                    </TabsTrigger>
+                </TabsList>
+            </Tabs>
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="text">Text Content</Label>
           <Textarea 
@@ -77,39 +105,81 @@ export function ContentConfig() {
           />
         </div>
 
-        <div className="space-y-2">
-          <Label>Images (Max 9)</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {moment.images.map((img, idx) => (
-              <div key={idx} className="relative aspect-square bg-muted rounded-md overflow-hidden group">
-                <img src={img} alt="" className="w-full h-full object-cover" />
-                <button 
-                  onClick={() => removeImage(idx)}
-                  className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            ))}
-            {moment.images.length < 9 && (
-              <div className="aspect-square bg-muted rounded-md flex items-center justify-center border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50 transition-colors relative cursor-pointer">
-                <Plus className="w-6 h-6 text-muted-foreground" />
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="absolute inset-0 opacity-0 cursor-pointer" 
-                  onChange={handleImageUpload}
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        {/* Conditional Rendering based on Type */}
+        {moment.type === 'original' ? (
+            <div className="space-y-2">
+                <Label>Images (Max 9)</Label>
+                <div className="grid grid-cols-3 gap-2">
+                    {moment.images.map((img, idx) => (
+                    <div key={idx} className="relative aspect-square bg-muted rounded-md overflow-hidden group">
+                        <img src={img} alt="" className="w-full h-full object-cover" />
+                        <button 
+                        onClick={() => removeImage(idx)}
+                        className="absolute top-1 right-1 bg-black/50 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                        <X className="w-3 h-3" />
+                        </button>
+                    </div>
+                    ))}
+                    {moment.images.length < 9 && (
+                    <div className="aspect-square bg-muted rounded-md flex items-center justify-center border-2 border-dashed border-muted-foreground/25 hover:border-muted-foreground/50 transition-colors relative cursor-pointer">
+                        <Plus className="w-6 h-6 text-muted-foreground" />
+                        <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="absolute inset-0 opacity-0 cursor-pointer" 
+                        onChange={handleImageUpload}
+                        />
+                    </div>
+                    )}
+                </div>
+            </div>
+        ) : (
+            <div className="space-y-4 p-4 border rounded-lg bg-muted/20">
+                <div className="space-y-2">
+                    <Label htmlFor="link-title">Link Title</Label>
+                    <Input 
+                        id="link-title"
+                        value={moment.linkInfo?.title || ''}
+                        onChange={(e) => setMoment({ 
+                            linkInfo: { ...moment.linkInfo!, title: e.target.value } 
+                        })}
+                        placeholder="Page Title"
+                    />
+                </div>
+                
+                <div className="space-y-2">
+                    <Label>Link Cover Image</Label>
+                    <div className="flex items-center gap-4">
+                        <div className="relative w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0 border">
+                            <img 
+                                src={moment.linkInfo?.cover || '/favicon.png'} 
+                                alt="Link Cover" 
+                                className="w-full h-full object-cover" 
+                            />
+                             <div className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/30 transition-colors cursor-pointer group">
+                                <input 
+                                    type="file" 
+                                    accept="image/*" 
+                                    className="absolute inset-0 opacity-0 cursor-pointer" 
+                                    onChange={handleLinkCoverUpload}
+                                />
+                                <Plus className="text-white opacity-0 group-hover:opacity-100" />
+                            </div>
+                        </div>
+                        <div className="flex-1 text-xs text-muted-foreground">
+                            <p>Upload a square image for the link preview.</p>
+                            <p className="mt-1">Click image to change.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="time">Time</Label>
             <div className="relative">
-                {/* Standard datetime picker */}
                 <div className="relative">
                     <Input
                         type="datetime-local"
@@ -120,21 +190,7 @@ export function ContentConfig() {
                         style={{ display: 'block' }}
                     />
                 </div>
-                {/* Fallback manual text input for "Just now" etc? 
-                    The user requested "Change to standard date time component", so maybe we replace the text input entirely.
-                    But if we do, we lose "Just now".
-                    Let's provide a way to type manual text too?
-                    Actually, let's keep it simple: Date Picker writes to Store. 
-                    If user wants "Just now", they can't type it in the date picker.
-                    
-                    Alternative: Text Input + Date Picker Icon.
-                    Let's try that to be most flexible.
-                */}
             </div>
-            {/* If we strictly follow "Change this to a standard date time selection component", we might just swap it. 
-               But let's add a small text input below or toggle? 
-               Let's just use a Text Input that has a Date Picker Trigger.
-            */}
              <div className="flex gap-2 mt-1">
                  <Input 
                     id="time-manual" 

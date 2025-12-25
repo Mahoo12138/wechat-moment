@@ -19,14 +19,22 @@ export interface DeviceState {
   scale: number;
 }
 
+export interface LinkInfo {
+  title: string;
+  cover: string;
+  url?: string;
+}
+
 export interface WeChatMomentState {
   user: {
     avatar: string;
     nickname: string;
   };
   moment: {
+    type: 'original' | 'link';
     text: string;
     images: string[];
+    linkInfo?: LinkInfo;
     time: string;
     location?: string;
     source?: string; // 来源，如"部分可见"

@@ -26,8 +26,14 @@ const initialState: WeChatMomentState = {
     nickname: "冷漠的吉普赛人",
   },
   moment: {
+    type: 'original',
     text: "普通小孩，热爱生活中",
     images: [],
+    linkInfo: {
+        title: "这是一个分享链接的标题",
+        cover: "/favicon.png",
+        url: "https://www.example.com"
+    },
     time: "Just now",
     location: "Shanghai, China",
     source: "",
