@@ -13,9 +13,30 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { DEVICES } from '@/constants/devices'
+import { useState, useEffect, ChangeEvent } from 'react'
 
 export function SystemConfig() {
   const { system, setSystem, device, setDevice } = useMomentStore()
+
+  // Local state for time picker (HH:mm)
+  const [timeInputValue, setTimeInputValue] = useState('')
+
+  useEffect(() => {
+     // Check if system.time is valid HH:mm (simple check)
+     // Regex for HH:mm (24h)
+     const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/
+     if (timeRegex.test(system.time)) {
+         setTimeInputValue(system.time)
+     } else {
+         setTimeInputValue('')
+     }
+  }, [system.time])
+
+  const handleTimeChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const val = e.target.value
+      setTimeInputValue(val)
+      if (val) setSystem({ time: val })
+  }
 
   return (
     <Card>
@@ -36,9 +57,6 @@ export function SystemConfig() {
                   modelId: selectedDevice.id,
                   width: selectedDevice.width,
                   height: selectedDevice.height,
-                  // Keep current scale or reset? Let's keep current scale if user manually adjusted it, 
-                  // but maybe better to use device default if we want to be strict.
-                  // For now, let's use the device default scale to ensure it fits.
                   scale: selectedDevice.scale
                 })
               }
@@ -74,11 +92,25 @@ export function SystemConfig() {
 
         <div className="space-y-2">
           <Label htmlFor="sys-time">Time</Label>
-          <Input 
-            id="sys-time" 
-            value={system.time} 
-            onChange={(e) => setSystem({ time: e.target.value })}
-          />
+          <div className="relative">
+              <Input 
+                type="time"
+                value={timeInputValue}
+                onChange={handleTimeChange}
+                className="w-full block"
+                style={{ display: 'block' }}
+              />
+          </div>
+          <div className="flex gap-2 mt-1">
+            <Input 
+                id="sys-time" 
+                value={system.time} 
+                onChange={(e) => setSystem({ time: e.target.value })}
+                placeholder="Custom (e.g. 12:00)"
+                className="flex-1"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">Pick a time above or type custom text below.</p>
         </div>
 
         <div className="space-y-4">

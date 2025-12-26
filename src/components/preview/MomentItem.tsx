@@ -6,7 +6,7 @@ export function MomentItem() {
 
   return (
     <div className="px-2 pt-2 text-[15px]">
-        <div className="flex gap-3">
+        <div className="flex gap-2">
             {/* Left: Avatar */}
             <img 
                 src={user.avatar} 
@@ -23,7 +23,7 @@ export function MomentItem() {
 
                 {/* Text Content */}
                 {moment.text && (
-                <div className="text-wx-text-primary dark:text-white mb-2 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
+                <div className="text-wx-text-primary dark:text-white mb-1 leading-relaxed break-words whitespace-pre-wrap text-[16px]">
                     {moment.text}
                 </div>
                 )}
@@ -42,7 +42,7 @@ export function MomentItem() {
                     </div>
                 ) : (
                     moment.images.length > 0 && (
-                    <div className={`mb-3 grid gap-1.5 ${
+                    <div className={`mb-2 grid gap-1.5 ${
                         moment.images.length === 1 ? 'grid-cols-1 max-w-[200px]' : 
                         moment.images.length === 4 ? 'grid-cols-2 max-w-[200px]' : 
                         'grid-cols-3'
@@ -58,17 +58,17 @@ export function MomentItem() {
 
                 {/* Meta Info */}
                 <div className="flex items-center justify-between text-xs text-wx-text-secondary mb-1">
-                <div className="flex items-center gap-3 text-[13px]">
-                    <span>{moment.time}</span>
-                    {moment.source && <span>{moment.source}</span>}
-                    {moment.location && <span className="text-wx-link">{moment.location}</span>}
-                    <Trash2 className="w-[14px] h-[14px] text-wx-link" />
-                </div>
-                {/* Operation Menu Button */}
-                <div className="bg-gray-100 rounded-[4px] px-2.5 py-1.5 flex gap-1 cursor-pointer">
-                    <div className="w-1.5 h-1.5 rounded-full bg-wx-link"></div>
-                    <div className="w-1.5 h-1.5 rounded-full bg-wx-link"></div>
-                </div>
+                    <div className="flex items-center gap-2 text-[13px] flex-1 min-w-0 mr-2">
+                        <span className="whitespace-nowrap flex-shrink-0">{moment.time}</span>
+                        {moment.source && <span className="whitespace-nowrap flex-shrink-0">{moment.source}</span>}
+                        {moment.location && <span className="text-wx-link truncate min-w-0">{moment.location}</span>}
+                        <Trash2 className="w-[14px] h-[14px] text-wx-link flex-shrink-0" />
+                    </div>
+                    {/* Operation Menu Button */}
+                    <div className="bg-gray-100 rounded-[4px] px-2.5 py-1.5 flex gap-1 cursor-pointer flex-shrink-0">
+                        <div className="w-1 h-1 rounded-full bg-wx-link"></div>
+                        <div className="w-1 h-1 rounded-full bg-wx-link"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -78,8 +78,8 @@ export function MomentItem() {
             <div className="bg-wx-bg-comment dark:bg-[#202020] rounded-lg p-3 mt-1">
                 {/* Likes Area */}
                 {interactions.likes.length > 0 && (
-                    <div className={`flex items-start gap-3 ${interactions.comments.length > 0 ? 'mb-4 border-b border-black/5 dark:border-white/10 pb-3' : ''}`}>
-                        <Heart className="w-5 h-5 text-wx-link mt-1 stroke-[1.5]" />
+                    <div className={`flex items-start gap-2 ${interactions.comments.length > 0 ? 'mb-4 border-b border-black/5 dark:border-white/10 pb-3' : ''}`}>
+                        <Heart className="w-4 h-4 text-wx-link mt-2 stroke-[1.5]" />
                         <div className="flex-1 flex flex-wrap gap-1.5">
                             {interactions.likes.map((like) => (
                                 <img 
@@ -94,8 +94,8 @@ export function MomentItem() {
 
                 {/* Comments Area */}
                 {interactions.comments.length > 0 && (
-                    <div className="flex items-start gap-3">
-                        <MessageSquare className="w-5 h-5 text-wx-link mt-1 stroke-[1.5]" />
+                    <div className="flex items-start gap-2">
+                        <MessageSquare className="w-4 h-4 text-wx-link mt-2 stroke-[1.5]" />
                         <div className="flex-1 flex flex-col gap-3">
                             {interactions.comments.map((comment) => (
                             <div key={comment.id} className="flex gap-2">
