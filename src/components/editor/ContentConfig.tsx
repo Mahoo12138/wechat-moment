@@ -85,7 +85,7 @@ export function ContentConfig() {
                 linkInfo: {
                     ...moment.linkInfo!,
                     title: title || moment.linkInfo?.title || 'No Title',
-                    cover: image?.url || moment.linkInfo?.cover || '/favicon.png'
+                    cover: image?.url || moment.linkInfo?.cover || './favicon.png'
                 }
             })
         }
@@ -209,7 +209,7 @@ export function ContentConfig() {
                     <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 bg-muted rounded-md overflow-hidden flex-shrink-0 border">
                             <img 
-                                src={moment.linkInfo?.cover || '/favicon.png'} 
+                                src={moment.linkInfo?.cover || './favicon.png'} 
                                 alt="Link Cover" 
                                 className="w-full h-full object-cover" 
                             />

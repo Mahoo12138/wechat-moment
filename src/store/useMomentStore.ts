@@ -18,11 +18,11 @@ interface MomentStore extends WeChatMomentState {
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
 // Helper to get random avatar if none provided
-const getRandomAvatar = (seed?: string) => `/avatar/${Math.floor(Math.random() * 100) + 1}.jpg`;
+const getRandomAvatar = (seed?: string) => `./avatar/${Math.floor(Math.random() * 100) + 1}.jpg`;
 
 const initialState: WeChatMomentState = {
   user: {
-    avatar: "/avatar/default.jpg",
+    avatar: "./avatar/default.jpg",
     nickname: "冷漠的吉普赛人",
   },
   moment: {
@@ -31,7 +31,7 @@ const initialState: WeChatMomentState = {
     images: [],
     linkInfo: {
         title: "这是一个分享链接的标题",
-        cover: "/favicon.png",
+        cover: "./favicon.png",
         url: "https://www.example.com"
     },
     time: "Just now",
@@ -40,17 +40,17 @@ const initialState: WeChatMomentState = {
   },
   interactions: {
     likes: [
-      { id: "l1", nickname: "User A", avatar: "/avatar/2.jpg" },
-      { id: "l2", nickname: "User B", avatar: "/avatar/3.jpg" },
-      { id: "l3", nickname: "User C", avatar: "/avatar/4.jpg" },
-      { id: "l4", nickname: "User D", avatar: "/avatar/5.jpg" },
-      { id: "l5", nickname: "User E", avatar: "/avatar/6.jpg" },
+      { id: "l1", nickname: "User A", avatar: "./avatar/2.jpg" },
+      { id: "l2", nickname: "User B", avatar: "./avatar/3.jpg" },
+      { id: "l3", nickname: "User C", avatar: "./avatar/4.jpg" },
+      { id: "l4", nickname: "User D", avatar: "./avatar/5.jpg" },
+      { id: "l5", nickname: "User E", avatar: "./avatar/6.jpg" },
     ],
     comments: [
       {
         id: "1",
         user: "Friend A",
-        avatar: "/avatar/7.jpg",
+        avatar: "./avatar/7.jpg",
         content: "好久不见呐！",
       },
     ],

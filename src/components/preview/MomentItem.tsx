@@ -32,7 +32,7 @@ export function MomentItem() {
                 {moment.type === 'link' ? (
                     <div className="mb-2 bg-[#f3f3f5] dark:bg-[#202020] p-1.5 flex items-center gap-2 rounded-[4px] cursor-pointer">
                         <img 
-                            src={moment.linkInfo?.cover || '/favicon.png'} 
+                            src={moment.linkInfo?.cover || './favicon.png'} 
                             alt="Link Cover" 
                             className="w-[45px] h-[45px] object-cover bg-white"
                         />
