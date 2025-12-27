@@ -1,7 +1,7 @@
 import { PreviewDevice } from '@/components/preview/PreviewDevice'
 import { ConfigForm } from '@/components/editor/ConfigForm'
 import { Button } from '@/components/ui/button'
-import { Settings2 } from 'lucide-react'
+import { Settings2, Moon, Sun } from 'lucide-react'
 import {
   Drawer,
   DrawerContent,
@@ -9,8 +9,35 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
+import { useState, useEffect } from 'react'
 
 export function EditorPage() {
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIsDarkMode(true)
+      document.documentElement.classList.add('dark')
+    } else {
+      setIsDarkMode(false)
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const newMode = !isDarkMode
+    setIsDarkMode(newMode)
+    if (newMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Left Panel - Preview */}
@@ -39,9 +66,12 @@ export function EditorPage() {
       </div>
 
       {/* Right Panel - Configuration (Desktop only) */}
-      <div className="hidden md:flex w-[600px] border-l bg-card flex-col h-full shadow-xl z-10">
-        <div className="p-4 border-b">
+      <div className="hidden md:flex w-[400px] border-l bg-card flex-col h-full shadow-xl z-10">
+        <div className="p-4 border-b flex items-center justify-between">
           <h2 className="font-semibold text-lg">Configuration</h2>
+          <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle Theme">
+            {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
           <ConfigForm />

@@ -65,7 +65,7 @@ export function MomentItem() {
                         <Trash2 className="w-[14px] h-[14px] text-wx-link flex-shrink-0" />
                     </div>
                     {/* Operation Menu Button */}
-                    <div className="bg-gray-100 rounded-[4px] px-2.5 py-1.5 flex gap-1 cursor-pointer flex-shrink-0">
+                    <div className="bg-gray-100 dark:bg-[#202020] rounded-[4px] px-2.5 py-1.5 flex gap-1 cursor-pointer flex-shrink-0">
                         <div className="w-1 h-1 rounded-full bg-wx-link"></div>
                         <div className="w-1 h-1 rounded-full bg-wx-link"></div>
                     </div>
