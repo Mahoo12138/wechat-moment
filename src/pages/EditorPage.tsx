@@ -10,9 +10,11 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { useState, useEffect } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 export function EditorPage() {
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const isMobile = useMediaQuery({ maxWidth: 768 })
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
@@ -41,9 +43,9 @@ export function EditorPage() {
   return (
     <div className="flex h-screen overflow-hidden bg-background">
       {/* Left Panel - Preview */}
-      <div className="flex-1 bg-muted/30 flex items-center justify-center p-8 overflow-hidden relative">
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-50 pointer-events-none" />
-        <PreviewDevice />
+      <div className={`flex-1 flex items-center justify-center overflow-hidden relative ${isMobile ? 'p-0 bg-background' : 'p-8 bg-muted/30'}`}>
+        {!isMobile && <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-50 pointer-events-none" />}
+        <PreviewDevice isMobile={isMobile} />
         
         {/* Mobile Config Trigger */}
         <div className="absolute bottom-6 right-6 md:hidden z-50">
