@@ -4,6 +4,7 @@ import {
   createRouter,
   createRoute,
   createRootRoute,
+  createHashHistory,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { WelcomePage } from '@/pages/WelcomePage'
@@ -32,7 +33,12 @@ const editorRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([indexRoute, editorRoute])
 
-const router = createRouter({ routeTree })
+const hashHistory = createHashHistory()
+
+const router = createRouter({
+  routeTree,
+  history: hashHistory,
+})
 
 declare module '@tanstack/react-router' {
   interface Register {
